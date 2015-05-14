@@ -3,6 +3,7 @@ import scrapy
 from scrapy.shell import inspect_response
 from scrapy.http import Request,FormRequest
 
+import re
 import leancloud
 from leancloud import Object
 from leancloud import LeanCloudError
@@ -24,7 +25,7 @@ class BoarderSpider(scrapy.Spider):
 
         Sections = Object.extend('Sections')
         query = Query(Sections)
-        query.start_with('sectionLink')
+        query.exists('sectionLink')
         query.select('sectionLink')
         sections= query.find()
         self.urls = []
@@ -41,8 +42,9 @@ class BoarderSpider(scrapy.Spider):
 
         item = BbsboardItem()
       #  inspect_response(response,self)
-        link = response.xpath('//*[@id="m_main"]/ul/li/a/@href').extract()
-        name = response.xpath('//*[@id="m_main"]/ul/li/a/text()').extract()
-
+        item['link'] = response.xpath('//*[@id="m_main"]/ul/li/a/@href').extract()
+        item['name'] = response.xpath('//*[@id="m_main"]/ul/li/a/text()').extract()
+        item['parent'] = re.split('http://m.byr.cn(\w*)',response.url)[2]
       #  print item['sectionListLink']
+	print re.split('http://m.byr.cn(\w*)',response.url)
         return item

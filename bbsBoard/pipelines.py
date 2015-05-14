@@ -21,7 +21,7 @@ class BoardPipeline(object):
         Sections = Object.extend('Sections')
         Boards = Object.extend('Boards')
         for index ,link in enumerate(item['link']):
-            if 'board' == re.split('/\w*/*',link)[1]:
+            if 'board' == re.split('/(\w*)/*',link)[1]:
                 board = Boards()
                 query = Query(Boards)
                 query.equal_to('boardLink',link)
@@ -31,6 +31,7 @@ class BoardPipeline(object):
                     else:
                         board.set('boardLink',link)
                         board.set('boardName',item['name'][index])
+			board.set('parent',item['parent'])
                         try:
                             board.save()
                         except LeanCloudError,e:
@@ -48,6 +49,7 @@ class BoardPipeline(object):
                     else:
                         section.set('sectionLink',link)
                         section.set('sectionName',item['name'][index])
+			section.set('parent',item['parent'])
                         try:
                             section.save()
                         except LeanCloudError,e:
