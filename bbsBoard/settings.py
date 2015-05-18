@@ -15,6 +15,10 @@ NEWSPIDER_MODULE = 'bbsBoard.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'bbsBoard (+http://www.yourdomain.com)'
+
+APP_ID = 'w359bnk9hh7z8fx0hsy6ee7b2tmf5va250hstatnu0a2iqbi'
+MASTER_KEY = '6k2z44pax0ueopc4qmbnxa8gzg6inon0t2a7d1fc6czqm1ei'
+
 LOG_LEVEL = 'INFO'
 DOWNLOAD_TIMEOUT = 700
 
