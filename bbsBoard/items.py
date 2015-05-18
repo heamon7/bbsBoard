@@ -13,5 +13,5 @@ class BbsboardItem(scrapy.Item):
     # name = scrapy.Field()
     link = scrapy.Field()
     name = scrapy.Field()
-    parent = scrapy.Field()
+    parentLink = scrapy.Field()
 

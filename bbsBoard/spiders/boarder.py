@@ -49,11 +49,11 @@ class BoarderSpider(scrapy.Spider):
       #  inspect_response(response,self)
         item['link'] = response.xpath('//*[@id="m_main"]/ul/li/a/@href').extract()
         item['name'] = response.xpath('//*[@id="m_main"]/ul/li/a/text()').extract()
-        item['parent'] = re.split('http://m.byr.cn(\w*)',response.url)[2]
+        item['parentLink'] = re.split('http://m.byr.cn(\w*)',response.url)[2]
       #  print item['sectionListLink']
 	#print re.split('http://m.byr.cn(\w*)',response.url)
         return item
-    
+
     def closed(self,reason):
         #f = open('../../nohup.out')
         #print f.read()
