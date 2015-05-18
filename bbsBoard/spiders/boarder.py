@@ -42,7 +42,7 @@ class BoarderSpider(scrapy.Spider):
 
     def start_requests(self):
         #print "start_requests ing ......"
-        print self.urls
+        #print self.urls
         for url in self.urls:
             yield Request(url,callback = self.parse)
 
