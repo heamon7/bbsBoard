@@ -33,7 +33,7 @@ class BoardPipeline(object):
                         board.set('boardId',boardId)
                         board.set('boardLink',link)
                         board.set('boardName',item['name'][index])
-                        board.set('parentLink',item['parent'])
+                        board.set('parentLink',item['parentLink'])
                         try:
                             board.save()
                         except LeanCloudError,e:
@@ -52,7 +52,7 @@ class BoardPipeline(object):
                     else:
                         section.set('sectionLink',link)
                         section.set('sectionName',item['name'][index])
-                        section.set('parentLink',item['parent'])
+                        section.set('parentLink',item['parentLink'])
                         try:
                             section.save()
                         except LeanCloudError,e:
