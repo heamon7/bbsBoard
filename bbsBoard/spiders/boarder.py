@@ -12,7 +12,7 @@ from scrapy import log
 from scrapy.exceptions import DropItem
 
 from  bbsBoard.items import BbsboardItem
-
+import os
 class BoarderSpider(scrapy.Spider):
     name = "boarder"
     allowed_domains = ["m.byr.cn"]
@@ -20,8 +20,9 @@ class BoarderSpider(scrapy.Spider):
     start_urls = (
         'http://www.m.byr.cn/',
     )
-    def __init__(self):
-        leancloud.init('mctfj249nwy7c1ymu3cps56lof26s17hevwq4jjqeqoloaey', master_key='ao6h5oezem93tumlalxggg039qehcbl3x3u8ofo7crw7atok')
+    def __init__(self,stats):
+        self.stats = stats
+        leancloud.init('yn33vpeqrplovaaqf3r9ttjl17o7ej0ywmxv1ynu3d1c5wk8', master_key='zkw2itoe7oyyr3vmyrs8m95gbk0azmikc3jrtk2lw2z4792i')
 
         Sections = Object.extend('Sections')
         query = Query(Sections)
@@ -32,8 +33,12 @@ class BoarderSpider(scrapy.Spider):
         for section in sections:
             self.urls.append(self.baseUrl+section.get('sectionLink'))
 
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler.stats)
+
     def start_requests(self):
-        print "start_requests ing ......"
+        #print "start_requests ing ......"
         print self.urls
         for url in self.urls:
             yield Request(url,callback = self.parse)
@@ -46,5 +51,24 @@ class BoarderSpider(scrapy.Spider):
         item['name'] = response.xpath('//*[@id="m_main"]/ul/li/a/text()').extract()
         item['parent'] = re.split('http://m.byr.cn(\w*)',response.url)[2]
       #  print item['sectionListLink']
-	print re.split('http://m.byr.cn(\w*)',response.url)
+	#print re.split('http://m.byr.cn(\w*)',response.url)
         return item
+    
+    def closed(self,reason):
+        #f = open('../../nohup.out')
+        #print f.read()
+        try:
+            nohupOut = open(os.getcwd()+'/nohup.out','r').read()
+        except:
+            nohupOut = "Cannot read nohup.out file"
+
+        CrawlerLog = Object.extend('CrawlerLog')
+        crawlerLog = CrawlerLog()
+        crawlerLog.set('crawlerName',self.name)
+        crawlerLog.set('crawlerLog',nohupOut)
+        crawlerLog.set('closedReason',reason)
+        crawlerLog.set('crawlerStats',self.stats.get_stats())
+        try:
+            crawlerLog.save()
+        except:
+            pass

@@ -14,7 +14,7 @@ from scrapy.exceptions import DropItem
 
 class BoardPipeline(object):
     def __init__(self):
-        leancloud.init('mctfj249nwy7c1ymu3cps56lof26s17hevwq4jjqeqoloaey', master_key='ao6h5oezem93tumlalxggg039qehcbl3x3u8ofo7crw7atok')
+        leancloud.init('yn33vpeqrplovaaqf3r9ttjl17o7ej0ywmxv1ynu3d1c5wk8', master_key='zkw2itoe7oyyr3vmyrs8m95gbk0azmikc3jrtk2lw2z4792i')
 
     def process_item(self, item, spider):
 
@@ -24,14 +24,16 @@ class BoardPipeline(object):
             if 'board' == re.split('/(\w*)/*',link)[1]:
                 board = Boards()
                 query = Query(Boards)
-                query.equal_to('boardLink',link)
+                boardId = re.split('/board/',link)
+                query.equal_to('boardId',boardId)
                 try:
                     if query.find():
                         pass
                     else:
+                        board.set('boardId',boardId)
                         board.set('boardLink',link)
                         board.set('boardName',item['name'][index])
-			board.set('parent',item['parent'])
+                        board.set('parent',item['parent'])
                         try:
                             board.save()
                         except LeanCloudError,e:
@@ -41,6 +43,7 @@ class BoardPipeline(object):
 
             else:
                 section = Sections()
+                #sectionId = re.split('/section/',link)
                 query = Query(Sections)
                 query.equal_to('sectionLink',link)
                 try:
@@ -49,7 +52,7 @@ class BoardPipeline(object):
                     else:
                         section.set('sectionLink',link)
                         section.set('sectionName',item['name'][index])
-			section.set('parent',item['parent'])
+                        section.set('parent',item['parent'])
                         try:
                             section.save()
                         except LeanCloudError,e:
@@ -59,5 +62,5 @@ class BoardPipeline(object):
 
 
 
-        return item
-        #DropItem()
+        #return item
+        DropItem()
